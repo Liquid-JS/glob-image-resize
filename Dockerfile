@@ -11,4 +11,4 @@ FROM node:12
 COPY --from=builder /srv/glob-image-resize.tgz /tmp/glob-image-resize.tgz
 RUN yarn global add /tmp/glob-image-resize.tgz \
     && rm /tmp/glob-image-resize.tgz
-ENTRYPOINT glob-image-resizer
+CMD glob-image-resizer

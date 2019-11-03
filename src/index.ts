@@ -1,4 +1,4 @@
-#!node
+#!/usr/bin/env node
 import { basename, dirname, extname, sep } from 'path'
 import piexif = require('piexifjs')
 import sharp = require('sharp')
