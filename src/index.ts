@@ -30,14 +30,23 @@ src(args.g.map(g => g.toString()), { realpath: true, absolute: true, nodir: true
     .pipe(new Transform({
         readableObjectMode: true,
         writableObjectMode: true,
-        transform: (chunk: File, _enc, cb) => {
+        transform: async (chunk: File, _enc, cb) => {
             if (!chunk.isBuffer)
                 return cb(null, null)
 
-            const exif = piexif.load(chunk.contents.toString('binary'))
+            try {
+                // Check already transformed
+                const exif = piexif.load(chunk.contents.toString('binary'))
+                if (exif['0th'][piexif.ImageIFD.ImageHistory] == 'modified')
+                    return cb(null, null)
+            } catch (e) { }
 
-            if (exif['0th'][piexif.ImageIFD.ImageHistory] == 'modified')
+            try {
+                // Check valid image
+                await sharp(chunk.contents as Buffer).metadata()
+            } catch (e) {
                 return cb(null, null)
+            }
 
             const dir = dirname(chunk.path)
             const ext = extname(chunk.path)
