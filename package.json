@@ -1,0 +1,47 @@
+{
+    "name": "@liquid-js/glob-image-resize",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "node ./dist/index.js",
+        "start:dev": "ts-node-dev --no-notify ./src/index.ts",
+        "build": "tsc -p tsconfig.production.json",
+        "lint": "tslint --fix --project ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Liquid-JS/glob-image-resize.git"
+    },
+    "files": [
+        "dist"
+    ],
+    "bin": {
+        "glob-image-resize": "dist/index.js"
+    },
+    "types": "dist/index.d.ts",
+    "author": "",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/Liquid-JS/glob-image-resize/issues"
+    },
+    "homepage": "https://github.com/Liquid-JS/glob-image-resize#readme",
+    "dependencies": {
+        "piexifjs": "^1.0.6",
+        "sharp": "^0.23.2",
+        "vinyl": "^2.2.0",
+        "vinyl-fs": "^3.0.3",
+        "yargs": "^14.2.0"
+    },
+    "devDependencies": {
+        "@types/node": "^12.12.5",
+        "@types/sharp": "^0.23.0",
+        "@types/vinyl": "^2.0.3",
+        "@types/vinyl-fs": "^2.4.11",
+        "@types/yargs": "^13.0.3",
+        "ts-node": "^8.4.1",
+        "ts-node-dev": "^1.0.0-pre.44",
+        "tslint": "^5.20.0",
+        "typescript": "^3.6.4"
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "include": [
+        "src",
+        "test",
+        "typings",
+    ],
+    "exclude": [
+        "node_modules"
+    ],
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2017",
+        "moduleResolution": "node",
+        "removeComments": true,
+        "experimentalDecorators": true,
+        "preserveConstEnums": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "sourceMap": true,
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "outDir": "./dist",
+        "skipLibCheck": true,
+        "lib": [
+            "es2017",
+            "esnext",
+            "esnext.asynciterable"
+        ],
+    }
+}
