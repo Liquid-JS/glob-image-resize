@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import { basename, dirname, extname, sep } from 'path'
+import { basename, dirname, extname, isAbsolute, join, normalize, sep } from 'path'
+import { Transform } from 'stream'
+import { dest, src } from 'vinyl-fs'
 import piexif = require('piexifjs')
 import sharp = require('sharp')
-import { Transform } from 'stream'
 import File = require('vinyl')
-import { dest, src } from 'vinyl-fs'
 import yargs = require('yargs')
 
 const MODIFED_META = piexif.dump({ '0th': { [piexif.ImageIFD.ImageHistory]: 'modified' } })
@@ -25,6 +25,9 @@ const args = yargs
     .argv
 
 const size = args.m
+
+const remove = new Set<string>()
+const rmS = new Set(['.png', '.jpg', '.jpeg'])
 
 src(args.g.map(g => g.toString()), { realpath: true, absolute: true, nodir: true })
     .pipe(new Transform({
@@ -48,26 +51,51 @@ src(args.g.map(g => g.toString()), { realpath: true, absolute: true, nodir: true
                 return cb(null, null)
             }
 
+            console.log(chunk.path)
             const dir = dirname(chunk.path)
             const ext = extname(chunk.path)
             const base = basename(chunk.path, ext)
 
-            return cb(null, new File({
-                cwd: chunk.cwd,
-                base: chunk.base,
-                path: `${dir}${sep}${base}.jpg`,
-                contents: sharp(chunk.contents as Buffer)
-                    .ensureAlpha()
-                    .rotate()
-                    .resize(size, size, { fit: 'inside', withoutEnlargement: true })
-                    .jpeg({ quality: 95 })
-                    .pipe(new Transform({
-                        transform: (chunk: Buffer, _enc, cb) => {
-                            const data = piexif.insert(MODIFED_META, chunk.toString('binary'))
-                            cb(null, Buffer.from(data, 'binary'))
-                        }
-                    }))
-            }))
+            const sh = sharp(chunk.contents as Buffer)
+                .ensureAlpha()
+                .rotate()
+                .resize(size, size, { fit: 'inside', withoutEnlargement: true })
+
+            try {
+                const stats = await sh.stats()
+                const contents = stats.isOpaque
+                    ? sh
+                        .jpeg({ quality: 95 })
+                        .pipe(new Transform({
+                            transform: (chunk: Buffer, _enc, cb) => {
+                                const data = piexif.insert(MODIFED_META, chunk.toString('binary'))
+                                cb(null, Buffer.from(data, 'binary'))
+                            }
+                        }))
+                    : sh
+                        .png({ quality: 95 })
+
+                const target = `${dir}${sep}${base}.${stats.isOpaque ? 'jpg' : 'png'}`
+
+                if (rmS.has(ext.toLowerCase())) {
+                    const pth = join(chunk.base, chunk.path)
+                    remove.add(normalize(isAbsolute(pth) ? pth : join(chunk.cwd, pth)))
+                }
+
+                return cb(null, new File({
+                    cwd: chunk.cwd,
+                    base: chunk.base,
+                    path: target,
+                    contents
+                }))
+            } catch (err) {
+                console.error(`Failed: "${chunk.path}"`, err)
+            }
+
+            cb(null, null)
         }
     }))
-    .pipe(dest((f) => f.base))
+    .pipe(dest((f) => normalize(isAbsolute(f.base) ? f.base : join(f.cwd, f.base))))
+    .on('end', () => {
+        console.log(remove)
+    })
