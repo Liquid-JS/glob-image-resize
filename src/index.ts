@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import { basename, dirname, extname, isAbsolute, join, normalize, sep } from 'path'
-import { Transform } from 'stream'
-import { dest, src } from 'vinyl-fs'
+import { basename, dirname, extname, sep } from 'path'
 import piexif = require('piexifjs')
 import sharp = require('sharp')
+import { Transform } from 'stream'
 import File = require('vinyl')
+import { dest, src } from 'vinyl-fs'
 import yargs = require('yargs')
 
 const MODIFED_META = piexif.dump({ '0th': { [piexif.ImageIFD.ImageHistory]: 'modified' } })
@@ -75,11 +75,10 @@ src(args.g.map(g => g.toString()), { realpath: true, absolute: true, nodir: true
                     : sh
                         .png({ quality: 95 })
 
-                const target = `${dir}${sep}${base}.${stats.isOpaque ? 'jpg' : 'png'}`
+                const target = `${dir}${sep}${base}._${stats.isOpaque ? 'jpg' : 'png'}`
 
                 if (rmS.has(ext.toLowerCase())) {
-                    const pth = join(chunk.base, chunk.path)
-                    remove.add(normalize(isAbsolute(pth) ? pth : join(chunk.cwd, pth)))
+                    remove.add(chunk.path)
                 }
 
                 return cb(null, new File({
@@ -95,7 +94,7 @@ src(args.g.map(g => g.toString()), { realpath: true, absolute: true, nodir: true
             cb(null, null)
         }
     }))
-    .pipe(dest((f) => normalize(isAbsolute(f.base) ? f.base : join(f.cwd, f.base))))
+    .pipe(dest((f) => f.base))
     .on('end', () => {
         console.log(remove)
     })
