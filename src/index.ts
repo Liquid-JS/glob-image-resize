@@ -75,7 +75,7 @@ src(args.g.map(g => g.toString()), { realpath: true, absolute: true, nodir: true
                     : sh
                         .png({ quality: 95 })
 
-                const target = `${dir}${sep}${base}._${stats.isOpaque ? 'jpg' : 'png'}`
+                const target = `${dir}${sep}${base}.${stats.isOpaque ? 'jpg' : 'png'}`
 
                 if (rmS.has(ext.toLowerCase())) {
                     remove.add(chunk.path)
