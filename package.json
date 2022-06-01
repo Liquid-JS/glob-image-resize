@@ -28,7 +28,7 @@
     "homepage": "https://github.com/Liquid-JS/glob-image-resize#readme",
     "dependencies": {
         "piexifjs": "^1.0.6",
-        "sharp": "^0.23.2",
+        "sharp": "^0.30.5",
         "vinyl": "^2.2.0",
         "vinyl-fs": "^3.0.3",
         "yargs": "^14.2.0"
