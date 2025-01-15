@@ -1,0 +1,10 @@
+{
+    "dep": "prod,dev,bundle,optional,peer",
+    "upgrade": true,
+    "interactive": true,
+    "reject": [
+        "@types/node",
+        "@codemirror/language",
+        "codemirror"
+    ]
+}

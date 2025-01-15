@@ -1,47 +1,86 @@
 {
     "name": "@liquid-js/glob-image-resize",
     "version": "1.0.1",
-    "description": "",
-    "main": "dist/index.js",
+    "description": "Batch contain images to size",
+    "type": "module",
+    "main": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "exports": {
+        "./package.json": {
+            "default": "./package.json"
+        },
+        ".": {
+            "types": "./lib/index.d.ts",
+            "default": "./lib/index.js"
+        }
+    },
+    "bin": "lib/index.js",
+    "files": [
+        "lib"
+    ],
+    "dependencies": {
+        "piexifjs": "^1.0.6",
+        "sharp": "^0.33.5",
+        "vinyl": "^3.0.0",
+        "vinyl-fs": "^4.0.0",
+        "yargs": "^17.7.2"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^19.6.1",
+        "@commitlint/config-conventional": "^19.6.0",
+        "@stylistic/eslint-plugin": "^2.13.0",
+        "@types/node": "<23.0.0",
+        "@types/sharp": "^0.32.0",
+        "@types/vinyl": "^2.0.12",
+        "@types/vinyl-fs": "^3.0.5",
+        "@types/yargs": "^17.0.33",
+        "clean-package": "^2.2.0",
+        "commit-and-tag-version": "^12.5.0",
+        "eslint": "^9.18.0",
+        "eslint-plugin-import": "^2.31.0",
+        "eslint-plugin-jsdoc": "^50.6.1",
+        "eslint-plugin-prefer-arrow-functions": "^3.6.2",
+        "eslint-plugin-unused-imports": "^4.1.4",
+        "husky": "^9.1.7",
+        "npm-check-updates": "^17.1.13",
+        "rimraf": "^6.0.1",
+        "ts-node-maintained": "^10.9.4",
+        "typedoc": "^0.27.6",
+        "typescript": "^5.7.3",
+        "typescript-eslint": "^8.20.0"
+    },
     "scripts": {
-        "start": "node ./dist/index.js",
-        "start:dev": "ts-node-dev --no-notify ./src/index.ts",
-        "build": "tsc -p tsconfig.production.json",
-        "lint": "tslint --fix --project ."
+        "build": "rimraf lib && tsc -p tsconfig.lib.json",
+        "lint": "eslint . --fix",
+        "prepublishOnly": "npm run build",
+        "prepare": "husky",
+        "release": "git diff --exit-code && commit-and-tag-version && git push --follow-tags origin",
+        "docs": "typedoc",
+        "prepack": "clean-package",
+        "postpack": "clean-package restore"
     },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Liquid-JS/glob-image-resize.git"
     },
-    "files": [
-        "dist"
+    "keywords": [
+        "glob",
+        "image",
+        "resize"
     ],
-    "bin": {
-        "glob-image-resize": "dist/index.js"
-    },
-    "types": "dist/index.d.ts",
-    "author": "",
+    "author": "HitkoDev <development@hitko.si>",
     "license": "GPL-3.0",
     "bugs": {
         "url": "https://github.com/Liquid-JS/glob-image-resize/issues"
     },
-    "homepage": "https://github.com/Liquid-JS/glob-image-resize#readme",
-    "dependencies": {
-        "piexifjs": "^1.0.6",
-        "sharp": "^0.23.2",
-        "vinyl": "^2.2.0",
-        "vinyl-fs": "^3.0.3",
-        "yargs": "^14.2.0"
-    },
-    "devDependencies": {
-        "@types/node": "^12.12.5",
-        "@types/sharp": "^0.23.0",
-        "@types/vinyl": "^2.0.3",
-        "@types/vinyl-fs": "^2.4.11",
-        "@types/yargs": "^13.0.3",
-        "ts-node": "^8.4.1",
-        "ts-node-dev": "^1.0.0-pre.44",
-        "tslint": "^5.20.0",
-        "typescript": "^3.6.4"
+    "homepage": "https://liquid-js.github.io/glob-image-resize/",
+    "packageManager": "yarn@4.6.0",
+    "clean-package": {
+        "remove": [
+            "packageManager",
+            "scripts",
+            "devDependencies",
+            "clean-package"
+        ]
     }
 }
