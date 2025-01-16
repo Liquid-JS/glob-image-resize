@@ -29,4 +29,4 @@ docker run --rm -v $(pwd)/images:/images liquidjs/glob-image-resize -g "/images/
 
 ## License
 
-[GPL-3.0 license](https://github.com/Liquid-JS/glob-image-resize/blob/master/LICENSE)
+[GPL-3.0 License](https://github.com/Liquid-JS/glob-image-resize/blob/master/LICENSE)
