@@ -1,14 +1,14 @@
 // @ts-check
 import stylisticPlugin from '@stylistic/eslint-plugin'
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin'
-// @ts-ignore
 import importPlugin from 'eslint-plugin-import'
 import jsdocPlugin from 'eslint-plugin-jsdoc'
 import preferArrowPlugin from 'eslint-plugin-prefer-arrow-functions'
 import unusedImportsPlugin from 'eslint-plugin-unused-imports'
-import { config, parser } from 'typescript-eslint'
+import { defineConfig } from 'eslint/config'
+import { parser } from 'typescript-eslint'
 
-export default config(
+export default defineConfig(
     {
         ignores: ['lib', 'node_modules', 'coverage', 'docs', '.yarn', '.husky', 'tmp']
     },
@@ -18,6 +18,7 @@ export default config(
             '@typescript-eslint': typescriptEslintPlugin,
             '@import': importPlugin,
             '@jsdoc': jsdocPlugin,
+            // @ts-ignore
             '@prefer-arrow-functions': preferArrowPlugin,
             '@unused-imports': unusedImportsPlugin,
             '@stylistic': stylisticPlugin
@@ -25,7 +26,6 @@ export default config(
         languageOptions: {
             parser,
             parserOptions: {
-                project: 'tsconfig.json',
                 projectService: {
                     allowDefaultProject: ['.*']
                 }
